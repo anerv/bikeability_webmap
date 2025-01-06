@@ -1,0 +1,16 @@
+{
+"name": "../data/tiles/tiles_bikeability_clusters/",
+"description": "../data/tiles/tiles_bikeability_clusters/",
+"version": "2",
+"minzoom": "0",
+"maxzoom": "15",
+"center": "11.563110,54.772177,15",
+"bounds": "8.062579,54.555245,15.199865,57.760370",
+"antimeridian_adjusted_bounds": "8.062579,54.555245,15.199865,57.760370",
+"type": "overlay",
+"strategies": "[{\"tiny_polygons\":78169},{\"tiny_polygons\":78169},{\"tiny_polygons\":78169},{\"dropped_as_needed\":23043,\"tiny_polygons\":55126,\"tile_size_desired\":567224},{\"dropped_as_needed\":68841,\"tiny_polygons\":144,\"tile_size_desired\":1202919},{\"dropped_as_needed\":65546,\"tiny_polygons\":108,\"tile_size_desired\":1152288},{\"dropped_as_needed\":59947,\"tiny_polygons\":6,\"tile_size_desired\":1104772},{\"dropped_as_needed\":56783,\"tiny_polygons\":20,\"tile_size_desired\":950778},{\"tiny_polygons\":115},{\"tiny_polygons\":112},{\"tiny_polygons\":119},{\"tiny_polygons\":125},{\"tiny_polygons\":118},{\"tiny_polygons\":127},{\"tiny_polygons\":161},{\"tiny_polygons\":209}]",
+"format": "pbf",
+"generator": "tippecanoe v2.73.0",
+"generator_options": "tippecanoe -z15 --no-tile-compression --drop-densest-as-needed '--output-to-directory=../data/tiles/tiles_bikeability_clusters/' ../data/geojson/bikeability_clusters.geojson",
+"json": "{\"vector_layers\":[{\"id\":\"bikeability_clusters\",\"description\":\"\",\"minzoom\":0,\"maxzoom\":15,\"fields\":{\"cluster_label\":\"String\"}}],\"tilestats\":{\"layerCount\":1,\"layers\":[{\"layer\":\"bikeability_clusters\",\"count\":78169,\"geometry\":\"Polygon\",\"attributeCount\":1,\"attributes\":[{\"attribute\":\"cluster_label\",\"count\":5,\"type\":\"string\",\"values\":[\"1: High stress\",\"2: Local low stress connectivity\",\"3: Regional low stress connectivity\",\"4: High bikeability\",\"5: Highest bikeability and high density\"]}]}]}}"
+}

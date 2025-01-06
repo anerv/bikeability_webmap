@@ -1,0 +1,16 @@
+{
+"name": "../data/tiles/tiles_socio_clusters/",
+"description": "../data/tiles/tiles_socio_clusters/",
+"version": "2",
+"minzoom": "0",
+"maxzoom": "15",
+"center": "8.629761,56.683391,15",
+"bounds": "8.072510,54.559078,15.157377,57.752573",
+"antimeridian_adjusted_bounds": "8.072510,54.559078,15.157377,57.752573",
+"type": "overlay",
+"strategies": "[{\"tiny_polygons\":1271},{\"tiny_polygons\":846},{\"tiny_polygons\":524},{\"tiny_polygons\":355},{\"tiny_polygons\":355},{\"tiny_polygons\":328},{\"tiny_polygons\":262},{\"tiny_polygons\":208},{\"tiny_polygons\":176},{\"tiny_polygons\":116},{\"tiny_polygons\":54},{\"tiny_polygons\":16},{\"tiny_polygons\":4},{\"tiny_polygons\":1},{\"tiny_polygons\":6},{\"tiny_polygons\":17}]",
+"format": "pbf",
+"generator": "tippecanoe v2.73.0",
+"generator_options": "tippecanoe -z15 --no-tile-compression --drop-densest-as-needed '--output-to-directory=../data/tiles/tiles_socio_clusters/' ../data/geojson/socio_clusters.geojson",
+"json": "{\"vector_layers\":[{\"id\":\"socio_clusters\",\"description\":\"\",\"minzoom\":0,\"maxzoom\":15,\"fields\":{\"socio_label\":\"String\"}}],\"tilestats\":{\"layerCount\":1,\"layers\":[{\"layer\":\"socio_clusters\",\"count\":1284,\"geometry\":\"Polygon\",\"attributeCount\":1,\"attributes\":[{\"attribute\":\"socio_label\",\"count\":7,\"type\":\"string\",\"values\":[\"1: High income - 2 cars\",\"2: Very high income - 2 cars\",\"3: Medium income - high car\",\"4: Medium/high income - medium car\",\"5: Medium/low income - 1 car\",\"6: Very low income - low car\",\"7: Medium income - very low car\"]}]}]}}"
+}
