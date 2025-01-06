@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Based on https://martinfleischmann.net/how-to-create-a-vector-based-web-map-hosted-on-github/ -->
+
+<head>
+    <title>Bikeability in Denmark</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- load leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+
+    <!-- load VectorGrid extension -->
+    <script src="https://unpkg.com/leaflet.vectorgrid@1.3.0/dist/Leaflet.VectorGrid.bundled.js"></script>
+
+    <!-- load locate plugin -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.76.1/dist/L.Control.Locate.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.76.1/dist/L.Control.Locate.min.js"
+        charset="utf-8"></script>
+
+
+    <!-- legend styles -->
+    <style type='text/css'>
+        body {
+            font-family: sans-serif;
+        }
+
+        .maplegend {
+            position: absolute;
+            z-index: 9999;
+            background-color: rgba(255, 255, 255, .8);
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            font-size: 12px/14px;
+            right: 10px;
+            bottom: 45px;
+            max-width: 480px;
+            display: none;
+            font-family: sans-serif;
+        }
+
+
+        .maplegend .legend-title {
+            text-align: left;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #000000;
+            font-size: larger;
+        }
+
+        .maplegend .legend-subtitle {
+            text-align: left;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #000000;
+            font-size: smaller;
+        }
+
+        .maplegend .legend-scale ul {
+            margin: 0;
+            margin-bottom: 0px;
+            padding: 0;
+            float: left;
+            list-style: none;
+        }
+
+
+        .maplegend .legend-scale ul li {
+            list-style: none;
+            margin-left: 0;
+            line-height: 16px;
+            margin-bottom: 6px;
+        }
+
+        .maplegend ul.legend-labels li span {
+            display: block;
+            float: left;
+            height: 14px;
+            width: 14px;
+            margin-right: 5px;
+            margin-left: 0;
+            border: 0px solid #ccc;
+        }
+
+
+        .maplegend .legend-source {
+            color: #777;
+            clear: both;
+        }
+
+        .maplegend a {
+            color: #777;
+        }
+
+
+        #maptitle {
+            position: absolute;
+            z-index: 9999;
+            background-color: rgba(255, 255, 255, .8);
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            margin-left: 20px;
+            font-size: 16px;
+            top: 30px;
+            right: 150px;
+            max-width: 480px;
+            height: 50%;
+            display: none;
+            line-height: 150%;
+        }
+
+        div.overflow {
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-family: sans-serif;
+            color: #000000;
+        }
+
+        /* h2 {
+            font-size: 22px;
+            font-family: sans-serif;
+            color: #000000;
+        }
+
+        h3 {
+            font-size: 20px;
+            font-family: sans-serif;
+            color: #BD5B4F;
+        } */
+
+        div.logos {
+            height: 100px;
+            margin-top: 30px;
+            padding: 0 30px 0 30px;
+        }
+
+        div.logos img {
+            vertical-align: middle;
+        }
+
+        div.logos a {
+            height: 100%;
+        }
+
+        button.toggle-title {
+            position: absolute;
+            z-index: 99999;
+            background-color: rgba(255, 255, 255, .8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            border: 0;
+            padding: 5px;
+            font-size: 16px;
+            right: 300px;
+            top: 10px;
+        }
+
+        button.toggle-legend {
+            position: absolute;
+            z-index: 99999;
+            background-color: rgba(255, 255, 255, .8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            border: 0;
+            padding: 5px;
+            font-size: 16px;
+            right: 14px;
+            bottom: 20px;
+        }
+
+        @media only screen and (min-width: 1920px) {
+
+            button.toggle-title,
+            button.toggle-legend {
+                padding: 10px;
+                font-size: 18px;
+            }
+        }
+    </style>
+
+    <script>
+        function toggleTitle() {
+            var x = document.getElementById("maptitle");
+            if (x.style.display === "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+        };
+
+        function toggleLegend() {
+            var x = document.getElementById("maplegend");
+            if (x.style.display === "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+        }
+    </script>
+
+</head>
+
+<body style='margin:0'>
+    <button onclick="toggleTitle()" class="toggle-title">Details</button>
+    <div id="maptitle">
+        <div class="overflow">
+            <h1>TITLE HERE
+            </h1>
+            <br>
+            This map TODO TODO.
+
+            <br>
+
+            Included layers are:
+            <ul>
+                <li>TODO.</li>
+            </ul>
+
+
+            <br>
+            <br>
+
+            For further details on the map content, see the descriptions in the map legend and the explanations in the
+            <a href="TODO: UPDATE URL" target="_blank" rel="noopener noreferrer">paper on TODO</a>.
+
+            <br>
+            <br>
+
+            The research has been funded by the Danish Road Directorate.
+            <!-- UPDATE - Ministry of Transport? -->
+
+            <div class="logos">
+                <a href="https://nerds.itu.dk/" target="_blank" rel="noopener noreferrer"><img
+                        src="images/nerdslogo.png" alt="NERDS ITU" width="28%" style="margin-right: 4%"></a>
+                <a href="https://itu.dk/" target="_blank" rel="noopener noreferrer"><img src="images/itulogo.jpg"
+                        alt="GDSL" width="28%" style="margin-right: 4%"></a>
+                <a href="https://www.vejdirektoratet.dk" target="_blank" rel="noopener noreferrer"><img
+                        src="images/vdlogo.svg" alt="The Danish Road Directorate" width="28%"
+                        style="margin-right: 4%"></a>
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <!-- div containing map -->
+    <div id="map" style="width: 100vw; height: 100vh; background: #fdfdfd"></div>
+
+    <!-- specification of leaflet map -->
+    <script>
+        // defaults
+        const minZoom = 6;
+        const maxZoom = 15;
+
+        // get parameters from URL to allow custom location and zoom start
+        var params = {};
+        window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+            params[key] = value;
+        });
+
+        // create map
+        var map = L.map('map', {
+            center: [params.lat || 55.843742, params.lng || 10.579834],
+            minZoom: minZoom,
+            maxZoom: maxZoom,
+            zoomControl: true,
+            zoom: params.zoom || 8,
+            tap: false,
+            renderer: L.canvas({ tolerance: 15 })
+        });
+
+        // Standard OSM basemap
+        var osm = L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }
+        ); //.addTo(map);
+
+        // Cycleosm basemap
+        var cyclosm = L.tileLayer(
+            "https://a.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png",
+            { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }
+        ); //.addTo(map);
+
+        // Positron 
+        var positron = L.tileLayer(
+            "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+            { attribution: '&copy; CartoDB &copy OpenStreetMap' }
+        ).addTo(map);
+
+        // Google satellite
+        googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            attribution: '&copy; Google',
+            maxZoom: maxZoom,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            opacity: 0.8,
+        });
+
+
+        var baseMaps = {
+            "OpenStreetMap": osm,
+            "Cyclosm": cyclosm,
+            "Positron": positron,
+            "Satellite": googleSat,
+
+        };
+
+
+        // const popup_info = {
+        //     "lts_1_dens": "LTS 1 density (km/km^2)",
+        //     "lts_2_dens": "LTS 2 density (km/km^2)",
+        //     "lts_3_dens": "LTS 3 density (km/km^2)",
+        //     "lts_4_dens": "LTS 4 density (km/km^2)",
+        //     "car_dens": "Car density (km/km^2)",
+        //     "total_network_dens": "Total network density (km/km^2)",
+        //     "lts_1_reach_5": "LTS 1 reachability (km)",
+        //     "lts_1_2_reach_5": "LTS ≤2 reachability (km)",
+        //     "lts_1_3_reach_5": "LTS ≤3 reachability (km)",
+        //     "lts_1_4_reach_5": "LTS ≤4 reachability (km)",
+        //     "car_reach_5": "Car reachability (km)",
+        //     "component_length_1": "Length of largest LTS 1 component (km)",
+        //     "component_length_1_2": "Length of largest LTS ≤2 component (km)",
+        //     "component_length_1_3": "Length of largest LTS ≤3 component (km)",
+        //     "component_length_1_4": "Length of largest LTS ≤4 component (km)",
+        // };
+
+        const bikeability_cmap = {
+            "1: High stress": "#882255",
+            "2: Local low stress connectivity": "#CC6677",
+            "3: Regional low stress connectivity": "#DDCC77",
+            "4: High bikeability": "#44AA99",
+            "5: Highest bikeability and high density": "#117733",
+        }
+
+        const socio_cmap = {
+            "1: High income - 2 cars": "#77AADD",  // light blue
+            "2: Very high income - 2 cars": "#99DDFF",  // light cyan
+            "3: Medium income - high car": "#44BB99",  // mint
+            "4: Medium/high income - medium car": "#AAAA00",  // olive
+            "5: Medium/low income - 1 car": "#BBCC33",  // pear
+            "6: Very low income - low car": "#FFAABB",  // pink
+            "7: Medium income - very low car": "#EE8866",  // orange
+        }
+
+        const edges_cmap = {
+            "1": "#117733",
+            "2": "#44AA99",
+            "3": "#DDCC77",
+            "4": "#CC6677",
+            "car": "#882255",
+            "total": "#151515",
+        }
+
+        // Color map function for density
+        // function getColorDensity(d) {
+        //     return d > 1000 ? '#800026' :
+        //         d > 500 ? '#BD0026' :
+        //             d > 200 ? '#E31A1C' :
+        //                 d > 100 ? '#FC4E2A' :
+        //                     d > 50 ? '#FD8D3C' :
+        //                         d > 20 ? '#FEB24C' :
+        //                             d > 10 ? '#FED976' :
+        //                                 '#FFEDA0';
+        // }
+
+        // TODO: implement color map functions for dens, reach and lcc
+
+        // styling
+        var vectorTileStyling = {
+            bikeability_clusters: function (properties) {
+                return ({
+                    weight: 1.5,
+                    color: bikeability_cmap[properties.cluster_label],
+                    opacity: 1.0,
+                    fillColor: bikeability_cmap[properties.cluster_label],
+                    fill: true,
+                    fillOpacity: 0.4
+                });
+            },
+            socio_clusters: function (properties) {
+                return ({
+                    weight: 1.5,
+                    color: socio_cmap[properties.socio_label],
+                    opacity: 1.0,
+                    fillColor: socio_cmap[properties.socio_label],
+                    fill: true,
+                    fillOpacity: 0.5
+                });
+            },
+            edges: function (properties) {
+                return ({
+                    weight: 1.5,
+                    color: edges_cmap[properties.lts],
+                    opacity: 1.0,
+                });
+            },
+        }
+
+        // define options of vector tiles
+        var mapVectorTileOptions = {
+            rendererFactory: L.canvas.tile,
+            interactive: true,
+            attribution: 'Made with data from OpenStreetMap, GeoDanmark, Statistics Denmark, &copy the GHSL (EU)',
+            maxNativeZoom: maxZoom,
+            minZoom: minZoom,
+            vectorTileLayerStyles: vectorTileStyling
+        };
+
+        // vector tiles URL
+        var edgesTiles = "data/tiles/tiles_edges/{z}/{x}/{y}.pbf";
+        var bikeabilityTiles = "data/tiles/tiles_bikeability_clusters/{z}/{x}/{y}.pbf";
+        var socioTiles = "data/tiles/tiles_socio_clusters/{z}/{x}/{y}.pbf";
+        var densityLTS1Tiles = "data/tiles/tiles_density_lts_1/{z}/{x}/{y}.pbf";
+        var densityLTS2Tiles = "data/tiles/tiles_density_lts_2/{z}/{x}/{y}.pbf";
+        var densityLTS3Tiles = "data/tiles/tiles_density_lts_3/{z}/{x}/{y}.pbf";
+        var densityLTS4Tiles = "data/tiles/tiles_density_lts_4/{z}/{x}/{y}.pbf";
+        var reachLTS1Tiles = "data/tiles/tiles_reach_lts_1/{z}/{x}/{y}.pbf";
+        var reachLTS2Tiles = "data/tiles/tiles_reach_lts_1_2/{z}/{x}/{y}.pbf";
+        var reachLTS3Tiles = "data/tiles/tiles_reach_lts_1_3/{z}/{x}/{y}.pbf";
+        var reachLTS4Tiles = "data/tiles/tiles_reach_lts_1_4/{z}/{x}/{y}.pbf";
+
+        var edgesLayer = new L.VectorGrid.Protobuf(
+            edgesTiles, mapVectorTileOptions
+        ).on('click', function (e) {
+            L.popup()
+                .setContent("<b>Name:</b> " + e.layer.properties.name + "<br><b>Type:</b> " + e.layer.properties.type + "<br><b>Level of Traffic Stress:</b> " + e.layer.properties.lts)
+                .setLatLng(e.latlng)
+                .openOn(map);
+        });
+
+        edgesLayer.addTo(map);
+
+        var bikeabilityLayer = new L.VectorGrid.Protobuf(
+            bikeabilityTiles, mapVectorTileOptions
+        ).on('click', function (e) {
+            L.popup()
+                .setContent("<b>Bikeability:</b> " + e.layer.properties.cluster_label)
+                .setLatLng(e.latlng)
+                .openOn(map);
+        });
+
+        var socioLayer = new L.VectorGrid.Protobuf(
+            socioTiles, mapVectorTileOptions
+        ).on('click', function (e) {
+            L.popup()
+                .setContent("<b>Socio-economic cluster:</b> " + e.layer.properties.socio_label)
+                .setLatLng(e.latlng)
+                .openOn(map);
+        });
+
+        var densityLTS1Layer = new L.VectorGrid.Protobuf(
+            densityLTS1Tiles, mapVectorTileOptions
+        ).on('click', function (e) {
+            L.popup()
+                .setContent("Infrastructure density</b><br>" + "LTS 1: " + e.layer.properties.lts_1_dens + " km/km2")
+                .setLatLng(e.latlng)
+                .openOn(map);
+        });
+
+        var densityLTS2Layer = new L.VectorGrid.Protobuf(
+            densityLTS2Tiles, mapVectorTileOptions
+        ).on('click', function (e) {
+            L.popup()
+                .setContent("Infrastructure density</b><br>" + "LTS 2: " + e.layer.properties.lts_2_dens) + " km/km2"
+                    .setLatLng(e.latlng)
+                    .openOn(map);
+        });
+
+        var densityLTS3Layer = new L.VectorGrid.Protobuf(
+            densityLTS3Tiles, mapVectorTileOptions
+        ).on('click', function (e) {
+            L.popup()
+                .setContent("Infrastructure density</b><br>" + "LTS 3: " + e.layer.properties.lts_3_dens) + " km/km2"
+                    .setLatLng(e.latlng)
+                    .openOn(map);
+        });
+
+        var densityLTS4Layer = new L.VectorGrid.Protobuf(
+            densityLTS4Tiles, mapVectorTileOptions
+        ).on('click', function (e) {
+            L.popup()
+                .setContent("Infrastructure density</b><br>" + "LTS 4: " + e.layer.properties.lts_4_dens) + " km/km2"
+                    .setLatLng(e.latlng)
+                    .openOn(map);
+        });
+
+        var reachLTS1Layer = new L.VectorGrid.Protobuf(
+            reachLTS1Tiles, mapVectorTileOptions
+        ).on('click', function (e) {
+            L.popup()
+                .setContent("<b>Network reach</b><br>" + "LTS 1:" + e.layer.properties.lts_1_reach_5 + " km")
+                .setLatLng(e.latlng)
+                .openOn(map);
+        });
+
+        var reachLTS2Layer = new L.VectorGrid.Protobuf(
+            reachLTS2Tiles, mapVectorTileOptions
+        ).on('click', function (e) {
+            L.popup()
+                .setContent("<b>Network reach</b><br>" + "LTS ≤2:" + e.layer.properties.lts_1_2_reach_5 + " km")
+                .setLatLng(e.latlng)
+                .openOn(map);
+        });
+
+
+        var reachLTS3Layer = new L.VectorGrid.Protobuf(
+            reachLTS3Tiles, mapVectorTileOptions
+        ).on('click', function (e) {
+            L.popup()
+                .setContent("<b>Network reach</b><br>" + "LTS ≤3:" + e.layer.properties.lts_1_3_reach_5 + " km")
+                .setLatLng(e.latlng)
+                .openOn(map);
+        });
+
+        var reachLTS4Layer = new L.VectorGrid.Protobuf(
+            reachLTS4Tiles, mapVectorTileOptions
+        ).on('click', function (e) {
+            L.popup()
+                .setContent("<b>Network reach</b><br>" + "LTS ≤4:" + e.layer.properties.lts_1_4_reach_5 + " km")
+                .setLatLng(e.latlng)
+                .openOn(map);
+        });
+
+        var tileMaps = {
+            "Bicycle infrastructure": edgesLayer,
+            "Bikeability": bikeabilityLayer,
+            "Socio-economic clusters": socioLayer,
+            "Infrastructure density LTS 1": densityLTS1Layer,
+            "Infrastructure density LTS 2": densityLTS2Layer,
+            "Infrastructure density LTS 3": densityLTS3Layer,
+            "Infrastructure density LTS 4": densityLTS4Layer,
+            "Network reach LTS 1": reachLTS1Layer,
+            "Network reach LTS ≤2": reachLTS2Layer,
+            "Network reach LTS ≤3": reachLTS3Layer,
+            "Network reach LTS ≤4": reachLTS4Layer,
+        };
+
+        var layerControl = L.control.layers(baseMaps, tileMaps).addTo(map);
+
+        // add scalebar
+        L.control.scale().addTo(map);
+
+        // add locate
+        L.control.locate().addTo(map);
+    </script>
+
+    <!-- legend -->
+    <button onclick="toggleLegend()" class="toggle-legend">Legend</button>
+    <div id='maplegend' class='maplegend'>
+        <div class='legend-title'>Content</div>
+
+        <!-- <div class='legend-scale'>
+            <div class="legend-subtitle">Bicycle Infrastructure</div>
+
+            <ul class='legend-labels'>
+                <li><span style='background:#796eb2'></span>OSM bicycle infrastructure</li>
+                <li><span style='background:#f87d2a'></span>GeoDanmark infrastructure</li>
+            </ul>
+
+
+            <div class="legend-subtitle">Corresponding infrastructure</div>
+
+            <ul class='legend-labels'>
+                <li><span style='background:#6D7BC9'></span>OSM matched</li>
+                <li><span style='background: #FF5733'></span>OSM unmatched</li>
+                <li><span style='background:#1D32A9'></span>GeoDanmark matched</li>
+                <li><span style='background:#C70039'></span>GeoDanmark unmatched</li>
+
+            </ul>
+
+            <div class="legend-subtitle">Largest connected components</div>
+
+            <ul class='legend-labels'>
+                <li><span style='background: #796eb2'></span>OSM largest component</li>
+                <li><span style='background:#f87d2a'></span>GeoDamark largest component</li>
+            </ul>
+
+            <div class="legend-subtitle">Disconnected components</div>
+            <ul class='legend-labels'>
+                <li>Unique colors for each component</li>
+            </ul>
+
+        </div> -->
+
+    </div>
+
+
+</body>
+
+</html>
