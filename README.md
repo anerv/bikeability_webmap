@@ -6,4 +6,4 @@ See [dk_bicycle_network](https://github.com/anerv/dk_bicycle_network) and [dk_ne
 
 Based on data from OpenStreetMap, GeoDanmark, Statistics Denmark, and the GHSL.
 
-The map has been developed based on this [guide](https://martinfleischmann.net/how-to-create-a-vector-based-web-map-hosted-on-github/)
+The map has been developed based on this [guide](https://martinfleischmann.net/how-to-create-a-vector-based-web-map-hosted-on-github/).
