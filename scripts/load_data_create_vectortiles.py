@@ -40,7 +40,6 @@ socio_clusters = gpd.read_postgis(
     geom_col="geometry",
 )
 
-
 # Load density hexagon data
 hex_density = gpd.read_postgis(
     "SELECT ROUND(lts_1_dens::DECIMAL, 2) AS lts_1_dens, ROUND(lts_2_dens::DECIMAL, 2) AS lts_2_dens, ROUND(lts_3_dens::DECIMAL, 2) AS lts_3_dens, ROUND(lts_4_dens::DECIMAL, 2) AS lts_4_dens, ROUND(total_car_dens::DECIMAL, 2) AS car_dens, ROUND(total_network_dens::DECIMAL,2) AS total_network_dens, geometry FROM density.density_hex;",
@@ -162,5 +161,40 @@ for name in to_json_names:
 
 for dataset, name in zip(to_json_data, to_json_names):
     dataset.to_parquet(f"../data/parquet/{name}.parquet")
+
+# %%
+# Get bin values for density and reach data sets
+
+density_columns = ["lts_1_dens", "lts_2_dens", "lts_3_dens", "lts_4_dens"]
+
+dens_min = min(hex_density[density_columns].min())
+dens_max = max(hex_density[density_columns].max())
+
+
+# %%
+reach_columns = [
+    "lts_1_reach_5",
+    "lts_1_2_reach_5",
+    "lts_1_3_reach_5",
+    "lts_1_4_reach_5",
+]
+
+reach_min = min(hex_reach[reach_columns].min())
+reach_max = max(hex_reach[reach_columns].max())
+
+
+# %%
+import matplotlib as mpl
+import numpy as np
+
+cmap = mpl.colormaps["viridis"]
+
+density_colors = [mpl.colors.rgb2hex(cmap(i)) for i in np.linspace(0, 1, 7)]
+
+reach_colors = [mpl.colors.rgb2hex(cmap(i)) for i in np.linspace(0, 1, 9)]
+
+
+# %%
+
 
 # %%
