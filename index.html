@@ -398,19 +398,44 @@
             "total": "#151515",
         }
 
-        // Color map function for density
-        // function getColorDensity(d) {
-        //     return d > 1000 ? '#800026' :
-        //         d > 500 ? '#BD0026' :
-        //             d > 200 ? '#E31A1C' :
-        //                 d > 100 ? '#FC4E2A' :
-        //                     d > 50 ? '#FD8D3C' :
-        //                         d > 20 ? '#FEB24C' :
-        //                             d > 10 ? '#FED976' :
-        //                                 '#FFEDA0';
-        // }
 
-        // TODO: implement color map functions for dens, reach and lcc
+        // ['#440154', '#443983', '#31688e', '#21918c', '#35b779', '#90d743', '#fde725']
+
+        //['#440154',
+        // '#472d7b',
+        // '#3b528b',
+        // '#2c728e',
+        // '#21918c',
+        // '#28ae80',
+        // '#5ec962',
+        // '#addc30',
+        // '#fde725']
+
+        // Color map function for density
+        function getColorDensity(d) {
+            return d > 25 ? '#fde725' :
+                d > 20 ? '#90d743' :
+                    d > 15 ? '#35b779' :
+                        d > 10 ? '#21918c' :
+                            d > 5 ? '#31688e' :
+                                d > 1 ? '#443983' :
+                                    d > 0 ? '#440154' :
+                                        '#FFFFFF';
+        }
+
+        function getColorReach(d) {
+            return d > 1000 ? '#fde725' :
+                d > 800 ? '#addc30' :
+                    d > 600 ? '#5ec962' :
+                        d > 400 ? '#28ae80' :
+                            d > 200 ? '#21918c' :
+                                d > 100 ? '#2c728e' :
+                                    d > 50 ? '#3b528b' :
+                                        d > 25 ? '#472d7b' :
+                                            d > 0 ? '#440154' :
+                                                '#FFFFFF';
+        }
+
 
         // styling
         var vectorTileStyling = {
@@ -439,6 +464,86 @@
                     weight: 1.5,
                     color: edges_cmap[properties.lts],
                     opacity: 1.0,
+                });
+            },
+            density_lts_1: function (properties) {
+                return ({
+                    weight: 1.5,
+                    color: getColorDensity(properties.lts_1_dens),
+                    fillColor: getColorDensity(properties.lts_1_dens),
+                    fill: true,
+                    opacity: 1.0,
+                    fillOpacity: 0.7
+                });
+            },
+            density_lts_2: function (properties) {
+                return ({
+                    weight: 1.5,
+                    color: getColorDensity(properties.lts_2_dens),
+                    fillColor: getColorDensity(properties.lts_2_dens),
+                    fill: true,
+                    opacity: 1.0,
+                    fillOpacity: 0.7
+                });
+            },
+            density_lts_3: function (properties) {
+                return ({
+                    weight: 1.5,
+                    color: getColorDensity(properties.lts_3_dens),
+                    fillColor: getColorDensity(properties.lts_3_dens),
+                    fill: true,
+                    opacity: 1.0,
+                    fillOpacity: 0.7
+                });
+            },
+            density_lts_4: function (properties) {
+                return ({
+                    weight: 1.5,
+                    color: getColorDensity(properties.lts_4_dens),
+                    fillColor: getColorDensity(properties.lts_4_dens),
+                    fill: true,
+                    opacity: 1.0,
+                    fillOpacity: 0.7
+                });
+            },
+            reach_lts_1: function (properties) {
+                return ({
+                    weight: 1.5,
+                    color: getColorReach(properties.lts_1_reach_5),
+                    fillColor: getColorReach(properties.lts_1_reach_5),
+                    fill: true,
+                    opacity: 1.0,
+                    fillOpacity: 0.7
+                });
+            },
+            reach_lts_1_2: function (properties) {
+                return ({
+                    weight: 1.5,
+                    color: getColorReach(properties.lts_1_2_reach_5),
+                    fillColor: getColorReach(properties.lts_1_2_reach_5),
+                    fill: true,
+                    opacity: 1.0,
+                    fillOpacity: 0.7
+                });
+            },
+            reach_lts_1_3: function (properties) {
+                return ({
+                    weight: 1.5,
+                    color: getColorReach(properties.lts_1_3_reach_5),
+                    fillColor: getColorReach(properties.lts_1_3_reach_5),
+                    fill: true,
+                    opacity: 1.0,
+                    fillOpacity: 0.7
+                });
+            },
+            reach_lts_1_4: function (properties) {
+                return ({
+                    weight: 1.5,
+                    color: getColorReach(properties.lts_1_4_reach_5),
+                    fillColor: getColorReach(properties.lts_1_4_reach_5),
+                    fill: true,
+                    opacity: 1.0,
+                    fillOpacity: 0.7
                 });
             },
         }
