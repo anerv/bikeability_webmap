@@ -189,6 +189,19 @@
                 font-size: 18px;
             }
         }
+
+        .legendDens {
+            line-height: 18px;
+            color: #555;
+        }
+
+        .legendDens i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
     </style>
 
     <script>
@@ -694,6 +707,27 @@
 
         // add locate
         L.control.locate().addTo(map);
+
+        var legendDens = L.control({ position: 'bottomleft' });
+
+        legendDens.onAdd = function (map) {
+
+            var div = L.DomUtil.create('div', 'info legendDens'),
+                grades = [0, 1, 5, 10, 15, 20, 25],
+                labels = [];
+
+            // loop through our density intervals and generate a label with a colored square for each interval
+            for (var i = 0; i < grades.length; i++) {
+                div.innerHTML +=
+                    '<i style="background:' + getColorDensity(grades[i] + 1) + '"></i> ' +
+                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+            }
+
+            return div;
+        };
+
+        legendDens.addTo(map);
+
     </script>
 
     <!-- legend -->
@@ -757,6 +791,7 @@
             <div class="legend-subtitle">Network reach - LTS ≤4</div>
 
         </div>
+
 
     </div>
 
