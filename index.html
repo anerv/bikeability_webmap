@@ -217,31 +217,50 @@
     <button onclick="toggleTitle()" class="toggle-title">Details</button>
     <div id="maptitle">
         <div class="overflow">
-            <h1>TITLE HERE
+            <h1>Bikeability in Denmark</h1>
             </h1>
             <br>
-            This map TODO TODO.
+            This map includes results from a research project analyzing bikeability and Level of Traffic Stress across
+            Denmark.
 
             <br>
 
             Included layers are:
             <ul>
-                <li>TODO.</li>
+                <li>Bikeability classification</li>
+                <li>Danish road and path network classified into Level of Traffic Stress (LTS)</li>
+                <li>Density of LTS 1 infrastructure</li>
+                <li>Density of LTS 2 infrastructure</li>
+                <li>Density of LTS 3 infrastructure</li>
+                <li>Density of LTS 4 infrastructure</li>
+                <li>Network reach for LTS 1 infrastructure</li>
+                <li>Network reach for LTS ≤2 infrastructure</li>
+                <li>Network reach for LTS ≤3 infrastructure</li>
+                <li>Network reach for LTS ≤4 infrastructure</li>
             </ul>
 
+            <br>
+
+            Network density represents the length of infrastructure (km) per square kilometer for each separate Level of
+            Traffic Stress. Network reach represents the amount of network (km) you can reach travelling from a point
+            for each incremental Level of Traffic Stress. Bikeability is a classification of each area based on the
+            local LTS density and network reach.
 
             <br>
             <br>
 
-            For further details on the map content, see the descriptions in the map legend and the explanations in the
-            <a href="TODO: UPDATE URL" target="_blank" rel="noopener noreferrer">paper on TODO</a>.
+            For further details on the map content, see the descriptions in the map legend, the associated
+            <a href="https://arxiv.org/abs/2412.06083" target="_blank" rel="noopener noreferrer">research
+                publication</a>, and the github repositories with the <a
+                href="https://github.com/anerv/dk_bicycle_network" target="_blank" rel="noopener noreferrer">data
+                processing</a> and <a href="https://github.com/anerv/dk_network_analysis" target="_blank"
+                rel="noopener noreferrer">analysis</a>.
 
             <br>
             <br>
 
             The research has been funded by the Danish Road Directorate.
             <!-- UPDATE - Ministry of Transport? -->
-
             <div class="logos">
                 <a href="https://nerds.itu.dk/" target="_blank" rel="noopener noreferrer"><img
                         src="images/nerdslogo.png" alt="NERDS ITU" width="28%" style="margin-right: 4%"></a>
@@ -537,7 +556,7 @@
         var tileMaps = {
             "Bicycle infrastructure": edgesLayer,
             "Bikeability": bikeabilityLayer,
-            "Socio-economic clusters": socioLayer,
+            // "Socio-economic clusters": socioLayer,
             "Infrastructure density LTS 1": densityLTS1Layer,
             "Infrastructure density LTS 2": densityLTS2Layer,
             "Infrastructure density LTS 3": densityLTS3Layer,
@@ -589,7 +608,7 @@
                 <li><span style='background:#117733'></span>5: Highest bikeability and high density1</li>
             </ul>
 
-            <div class="legend-subtitle">Socio-economic clusters</div>
+            <!-- <div class="legend-subtitle">Socio-economic clusters</div>
 
             <ul class='legend-labels'>
                 <li><span style='background:#77AADD'></span>1. High income - 2 cars</li>
@@ -599,7 +618,7 @@
                 <li><span style='background:#BBCC33'></span>5: Medium/low income - 1 car</li>
                 <li><span style='background:#FFAABB'></span>6: Very low income - low car</li>
                 <li><span style='background:#EE8866'></span>7: Medium income - very low car</li>
-            </ul>
+            </ul> -->
 
             <div class="legend-subtitle">Infrastructure density - LTS 1</div>
 
