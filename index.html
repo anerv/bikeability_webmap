@@ -41,7 +41,7 @@
             padding: 10px;
             font-size: 12px/14px;
             right: 10px;
-            bottom: 45px;
+            bottom: 50px;
             max-width: 480px;
             display: none;
             font-family: sans-serif;
@@ -189,19 +189,6 @@
                 font-size: 18px;
             }
         }
-
-        .legendDens {
-            line-height: 18px;
-            color: #555;
-        }
-
-        .legendDens i {
-            width: 18px;
-            height: 18px;
-            float: left;
-            margin-right: 8px;
-            opacity: 0.7;
-        }
     </style>
 
     <script>
@@ -254,20 +241,6 @@
 
             Click on a map feature to learn more about it or see the map legend for more information.
 
-            <!-- 
-            Included layers are:
-            <ul>
-                <li>Bikeability classification</li>
-                <li>Danish road and path network classified into Level of Traffic Stress (LTS)</li>
-                <li>Density of LTS 1 infrastructure</li>
-                <li>Density of LTS 2 infrastructure</li>
-                <li>Density of LTS 3 infrastructure</li>
-                <li>Density of LTS 4 infrastructure</li>
-                <li>Network reach for LTS 1 infrastructure</li>
-                <li>Network reach for LTS ≤2 infrastructure</li>
-                <li>Network reach for LTS ≤3 infrastructure</li>
-                <li>Network reach for LTS ≤4 infrastructure</li>
-            </ul> -->
 
             <br>
             <br>
@@ -365,25 +338,6 @@
 
         };
 
-
-        // const popup_info = {
-        //     "lts_1_dens": "LTS 1 density (km/km^2)",
-        //     "lts_2_dens": "LTS 2 density (km/km^2)",
-        //     "lts_3_dens": "LTS 3 density (km/km^2)",
-        //     "lts_4_dens": "LTS 4 density (km/km^2)",
-        //     "car_dens": "Car density (km/km^2)",
-        //     "total_network_dens": "Total network density (km/km^2)",
-        //     "lts_1_reach_5": "LTS 1 reachability (km)",
-        //     "lts_1_2_reach_5": "LTS ≤2 reachability (km)",
-        //     "lts_1_3_reach_5": "LTS ≤3 reachability (km)",
-        //     "lts_1_4_reach_5": "LTS ≤4 reachability (km)",
-        //     "car_reach_5": "Car reachability (km)",
-        //     "component_length_1": "Length of largest LTS 1 component (km)",
-        //     "component_length_1_2": "Length of largest LTS ≤2 component (km)",
-        //     "component_length_1_3": "Length of largest LTS ≤3 component (km)",
-        //     "component_length_1_4": "Length of largest LTS ≤4 component (km)",
-        // };
-
         const bikeability_cmap = {
             "1: High stress": "#882255",
             "2: Local low stress connectivity": "#CC6677",
@@ -411,18 +365,6 @@
             "total": "#151515",
         }
 
-
-        // ['#440154', '#443983', '#31688e', '#21918c', '#35b779', '#90d743', '#fde725']
-
-        //['#440154',
-        // '#472d7b',
-        // '#3b528b',
-        // '#2c728e',
-        // '#21918c',
-        // '#28ae80',
-        // '#5ec962',
-        // '#addc30',
-        // '#fde725']
 
         // Color map function for density
         function getColorDensity(d) {
@@ -708,26 +650,6 @@
         // add locate
         L.control.locate().addTo(map);
 
-        var legendDens = L.control({ position: 'bottomleft' });
-
-        legendDens.onAdd = function (map) {
-
-            var div = L.DomUtil.create('div', 'info legendDens'),
-                grades = [0, 1, 5, 10, 15, 20, 25],
-                labels = [];
-
-            // loop through our density intervals and generate a label with a colored square for each interval
-            for (var i = 0; i < grades.length; i++) {
-                div.innerHTML +=
-                    '<i style="background:' + getColorDensity(grades[i] + 1) + '"></i> ' +
-                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-            }
-
-            return div;
-        };
-
-        legendDens.addTo(map);
-
     </script>
 
     <!-- legend -->
@@ -736,6 +658,7 @@
         <div class='legend-title'>Content</div>
 
         <div class='legend-scale'>
+
             <div class="legend-subtitle">Bicycle Infrastructure</div>
 
             <ul class='legend-labels'>
@@ -759,7 +682,7 @@
                 <li><span style='background:#CC6677'></span>2: Local low stress connectivity</li>
                 <li><span style='background:#DDCC77'></span>3: Regional low stress connectivity</li>
                 <li><span style='background:#44AA99'></span>4: High bikeability</li>
-                <li><span style='background:#117733'></span>5: Highest bikeability and high density1</li>
+                <li><span style='background:#117733'></span>5: Highest bikeability and high density</li>
             </ul>
 
             <!-- <div class="legend-subtitle">Socio-economic clusters</div>
@@ -774,21 +697,35 @@
                 <li><span style='background:#EE8866'></span>7: Medium income - very low car</li>
             </ul> -->
 
-            <div class="legend-subtitle">Infrastructure density - LTS 1</div>
+            <div class="legend-subtitle">Infrastructure density (km/sqkm)</div>
 
-            <div class="legend-subtitle">Infrastructure density - LTS 2</div>
+            <ul class='legend-labels'>
+                <li><span style='background:#fde725'></span> > 25 </li>
+                <li><span style='background:#90d743'></span> > 20 </li>
+                <li><span style='background:#35b779'></span> > 15</li>
+                <li><span style='background:#21918c'></span> > 10</li>
+                <li><span style='background:#31688e'></span> > 5</li>
+                <li><span style='background:#443983'></span> > 1</li>
+                <li><span style='background:#440154'></span> > 0</li>
+                <li><span style='background:#FFFFFF; border:1px solid #000000'></span> 0</li>
 
-            <div class="legend-subtitle">Infrastructure density - LTS 3</div>
+            </ul>
 
-            <div class="legend-subtitle">Infrastructure density - LTS 4</div>
+            <div class="legend-subtitle">Network reach (km)</div>
 
-            <div class="legend-subtitle">Network reach - LTS 1</div>
+            <ul class='legend-labels'>
+                <li><span style='background:#fde725'></span> > 1,000</li>
+                <li><span style='background:#addc30'></span> > 800</li>
+                <li><span style='background:#5ec962'></span> > 600</li>
+                <li><span style='background:#28ae80'></span> > 400</li>
+                <li><span style='background:#21918c'></span> > 200</li>
+                <li><span style='background:#2c728e'></span> > 100</li>
+                <li><span style='background:#3b528b'></span> > 50</li>
+                <li><span style='background:#472d7b'></span> > 25</li>
+                <li><span style='background:#440154'></span> > 0</li>
+                <li><span style='background:#FFFFFF; border:1px solid #000000'></span> 0</li>
+            </ul>
 
-            <div class="legend-subtitle">Network reach - LTS ≤2</div>
-
-            <div class="legend-subtitle">Network reach - LTS ≤3</div>
-
-            <div class="legend-subtitle">Network reach - LTS ≤4</div>
 
         </div>
 
