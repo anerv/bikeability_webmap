@@ -357,13 +357,18 @@
         }
 
         const edges_cmap = {
-            "1": "#117733",
-            "2": "#44AA99",
-            "3": "#DDCC77",
-            "4": "#CC6677",
-            "car": "#882255",
-            "total": "#151515",
+            "all cyclists": "#0B7550",
+            "most cyclists": "#7ABA78",
+            "confident cyclists": "#FFC100",
+            "very confident cyclists": "#F97300",
+            "pedestrian": "#EAD8C0",
+            "no cycling": "#4F4F4F",
+            "no access": "#D7D8DA",
+            "dirt road": "#776956",
+            "paths bike": "#A79277",
+
         }
+
 
 
         // Color map function for density
@@ -417,7 +422,7 @@
             edges: function (properties) {
                 return ({
                     weight: 1.5,
-                    color: edges_cmap[properties.lts],
+                    color: edges_cmap[properties.type],
                     opacity: 1.0,
                 });
             },
@@ -530,7 +535,7 @@
             edgesTiles, mapVectorTileOptions
         ).on('click', function (e) {
             L.popup()
-                .setContent("<b>Name:</b> " + e.layer.properties.name + "<br><b>Type:</b> " + e.layer.properties.type + "<br><b>Level of Traffic Stress:</b> " + e.layer.properties.lts)
+                .setContent("<b>Name:</b> " + e.layer.properties.name + "<br><b>Type:</b> " + e.layer.properties.type) //  + "<br><b>Level of Traffic Stress:</b> " + e.layer.properties.lts
                 .setLatLng(e.latlng)
                 .openOn(map);
         });
