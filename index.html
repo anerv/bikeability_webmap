@@ -47,7 +47,6 @@
             font-family: sans-serif;
         }
 
-
         .maplegend .legend-title {
             text-align: left;
             margin-bottom: 10px;
@@ -68,7 +67,6 @@
             margin: 0;
             margin-bottom: 0px;
             padding: 0;
-            float: left;
             list-style: none;
         }
 
@@ -189,6 +187,7 @@
                 font-size: 18px;
             }
         }
+
     </style>
 
     <script>
@@ -665,23 +664,23 @@
         <div class='legend-scale'>
 
 
-            <div class="legend-subtitle">Bicycle Infrastructure</div>
+            <section class="legend-section">
+                <div class="legend-subtitle">Bicycle Infrastructure</div>
+                <ul class='legend-labels'>
+                    <li><span style='background:#0B7550'></span>LTS 1 - All cyclists</li>
+                    <li><span style='background:#7ABA78'></span>LTS 2 - Most cyclists</li>
+                    <li><span style='background:#FFC100'></span>LTS 3 - Confident cyclists</li>
+                    <li><span style='background:#F97300'></span>LTS 4 - Very confident cyclists</li>
+                    <li><span style='background:#A79277'></span>Paths - cycling allowed</li>
+                    <li><span style='background:#776956'></span>Dirt road</li>
+                    <li><span style='background:#EAD8C0'></span>Pedestrians</li>
+                    <li><span style='background:#4F4F4F'></span>No cycling</li>
+                    <li><span style='background:#D7D8DA'></span>No access</li>
+                </ul>
+            </section>
 
-            <ul class='legend-labels'>
-                <li><span style='background:#0B7550'></span>LTS 1 - All cyclists</li>
-                <li><span style='background:#7ABA78'></span>LTS 2 - Most cyclists</li>
-                <li><span style='background:#FFC100'></span>LTS 3 - Confident cyclists</li>
-                <li><span style='background:#F97300'></span>LTS 4 - Very confident cyclists</li>
-                <li><span style='background:#A79277'></span>Paths - cycling allowed</li>
-                <li><span style='background:#776956'></span>Dirt road</li>
-                <li><span style='background:#EAD8C0'></span>Pedestrians</li>
-                <li><span style='background:#4F4F4F'></span>No cycling</li>
-                <li><span style='background:#D7D8DA'></span>No access</li>
 
-
-            </ul>
-
-
+            <section class="legend-section">
             <div class="legend-subtitle">Bikeability</div>
 
             <ul class='legend-labels'>
@@ -691,7 +690,9 @@
                 <li><span style='background:#44AA99'></span>4: High bikeability</li>
                 <li><span style='background:#117733'></span>5: Highest bikeability and high density</li>
             </ul>
+            </section>
 
+            <section class="legend-section">
             <div class="legend-subtitle">Socio-economic clusters</div>
 
             <ul class='legend-labels'>
@@ -703,7 +704,9 @@
                 <li><span style='background:#FFAABB'></span>6: Very low income - low car</li>
                 <li><span style='background:#EE8866'></span>7: Medium income - very low car</li>
             </ul>
+            </section>
 
+            <section class="legend-section">
             <div class="legend-subtitle">Infrastructure density (km/sqkm)</div>
 
             <ul class='legend-labels'>
@@ -717,7 +720,9 @@
                 <li><span style='background:#FFFFFF; border:1px solid #000000'></span>0</li>
 
             </ul>
+            </section>
 
+            <section class="legend-section">
             <div class="legend-subtitle">Network reach (km)</div>
 
             <ul class='legend-labels'>
@@ -732,6 +737,7 @@
                 <li><span style='background:#440154'></span>> 0</li>
                 <li><span style='background:#FFFFFF; border:1px solid #000000'></span>0</li>
             </ul>
+            </section>
 
 
         </div>
